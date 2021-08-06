@@ -32,7 +32,7 @@ namespace AccountingNote.SystemAdmin
 
             if (!this.IsPostBack)
             {
-                if (this.Request.QueryString["UID"] == null)
+                if (this.Request.QueryString["ID"] == null)
                 {
                     this.btnDelete.Visible = false;
                     this.btnChangePWD.Visible = false;
@@ -43,11 +43,11 @@ namespace AccountingNote.SystemAdmin
                     this.btnDelete.Visible = true;
                     this.btnChangePWD.Visible =true;
 
-                    string idText = this.Request.QueryString["UID"];
-                    int uid;
-                    if (int.TryParse(idText, out uid))
+                    string idText = this.Request.QueryString["ID"];
+                    
+                    if (idText != null)
                     {
-                        var drUser = UserInfoManager.GetUser(uid, currentUser.ID);
+                        var drUser = UserInfoManager.GetUser(currentUser.ID);
 
                         if (drUser == null)
                         {
@@ -75,7 +75,7 @@ namespace AccountingNote.SystemAdmin
                     }
                     else
                     {
-                        this.ltMsg.Text = "UID is required.";
+                        this.ltMsg.Text = "ID is required.";
                         this.btnSave.Visible = false;
                         this.btnDelete.Visible = false;
                     }
@@ -97,18 +97,16 @@ namespace AccountingNote.SystemAdmin
             string account = this.txtAccount.Text;
             string email = this.txtEmail.Text;
             string userlevel = this.ddlActType.SelectedItem.Value;
-            string pwdText = this.txtPWD.Text;
+            string pwd = this.txtPWD.Text;
 
 
-            string idText = this.Request.QueryString["UID"];
+            string idText = this.Request.QueryString["ID"];
             if (string.IsNullOrWhiteSpace(idText))
             {
-
-                int pwd = Convert.ToInt32(pwdText);
                 UserInfoManager.CreateUser(id, name,pwd,account, email, userlevel);
                 if (pwd.ToString().Length >= 8 && pwd.ToString().Length <= 16)
                 {
-                    MessageBox.Show("修改密碼成功");
+                    MessageBox.Show("新增成功");
                     Response.Redirect("/SystemAdmin/UserList.aspx");
                 }
                 else
@@ -119,10 +117,10 @@ namespace AccountingNote.SystemAdmin
             }
             else
             {
-                int uid;
-                if (int.TryParse(idText, out uid))
+                
+                if (idText != null)
                 {
-                    UserInfoManager.UpdateUserInfo(uid, id, name, account, email, userlevel);
+                    UserInfoManager.UpdateUserInfo(account, name, email);
 
                     this.txtAccount.Text = currentUser.Account;
                 }
@@ -133,17 +131,16 @@ namespace AccountingNote.SystemAdmin
 
         protected void btnDelete_Click(object sender, EventArgs e)
         {
-            string idText = this.Request.QueryString["UID"];
+            string account = this.txtAccount.Text;
+            var currentUser = AuthManager.GetCurrentUser();
+            string idText = this.Request.QueryString["ID"];
 
             if (string.IsNullOrWhiteSpace(idText))
                 return;
-
-            int uid;
-            if (int.TryParse(idText, out uid))
+            else
             {
-                UserInfoManager.DeleteUser(uid);
+                UserInfoManager.DeleteUser(account);
             }
-
             Response.Redirect("/SystemAdmin/UserList.aspx");
         }
 
@@ -155,18 +152,12 @@ namespace AccountingNote.SystemAdmin
                 return;
             }
 
-            string idText = this.Request.QueryString["UID"];
+            string idText = this.Request.QueryString["ID"];
 
             if (idText != null)
             { 
-                Response.Redirect("/SystemAdmin/UserPassword.aspx?UID=" + idText.ToString(), true);
+                Response.Redirect("/SystemAdmin/UserPassword.aspx?ID=" + idText.ToString());
 
-            }
-            else
-            {
-                this.ltMsg.Text = "UID is required.";
-                this.btnSave.Visible = false;
-                this.btnDelete.Visible = false;
             }
 
         }

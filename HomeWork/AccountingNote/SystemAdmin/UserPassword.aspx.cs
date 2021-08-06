@@ -30,11 +30,11 @@ namespace AccountingNote.SystemAdmin
                 return;
             }
 
-            string idText = this.Request.QueryString["UID"];
-            int uid;
-            if (int.TryParse(idText, out uid))
+            string idText = this.Request.QueryString["ID"];
+            
+            if (idText != null)
             {
-                var drUser = UserInfoManager.GetUser(uid, currentUser.ID);
+                var drUser = UserInfoManager.GetUser(currentUser.ID);
 
                 this.ltAccount.Text = drUser["Account"].ToString();
             }
@@ -52,38 +52,40 @@ namespace AccountingNote.SystemAdmin
             string account = this.ltAccount.Text;
             string pwdText = this.txtPWD.Text;
             string cPWDText = this.txtCheckPWD.Text;
+            
 
 
-
-            string idText = this.Request.QueryString["UID"];
+            string idText = this.Request.QueryString["ID"];
 
             string npwd = this.txtNewPWD.Text;
-            int uid;
-            if (int.TryParse(idText, out uid))
+            
+            if (idText != null)
             {
                 if (string.Compare(pwdText, cPWDText, false) == 0)
                 {
                     // Execute 'update db'
-                    UserInfoManager.UpdateUserPWD(uid, npwd);
+                    
 
                     this.ltAccount.Text = currentUser.Account;
 
+                    if (npwd.Length >= 8 && npwd.Length <= 16)
+                    {
+                        UserInfoManager.UpdateUserPWD(id, npwd);
+                        MessageBox.Show("修改密碼成功");
+                        Response.Redirect("/SystemAdmin/UserList.aspx");
+                    }
+                    else
+                    {
+                        MessageBox.Show("密碼長度須為 8~16 碼");
+                        return;
+                    }
                 }
                 else
                 {
                     ltMsg.Text = "Please input password again..";
                 }
 
-                if(npwd.Length >= 8 && npwd.Length <= 16)
-                {
-                    MessageBox.Show("修改密碼成功");
-                    Response.Redirect("/SystemAdmin/UserList.aspx");
-                }
-                else
-                {
-                    MessageBox.Show("密碼長度須為 8~16 碼");
-                    return;
-                }
+                
                 
             }
         }

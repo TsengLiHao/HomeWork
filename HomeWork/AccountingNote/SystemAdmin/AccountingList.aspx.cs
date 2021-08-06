@@ -44,9 +44,9 @@ namespace AccountingNote.SystemAdmin
                 this.gvAccountingList.Visible = false;
                 this.plcNoData.Visible = true;
             }
-
+            
             DataRow ta = AccountingManager.GetAmount();
-
+            
             this.ltTotal.Text = $"小記 {ta["Total"]} 元";
 
         }

@@ -45,7 +45,8 @@ namespace AccountingNote
                 this.ltFirsttime.Text = dr["CreateDate"].ToString();
                 this.ltLasttime.Text = lastdr["CreateDate"].ToString();
                 this.ltValueOfExpense.Text = $"共 {value["ID"].ToString()} 筆";
-                this.ltValueOfMember.Text = $"共 {mValue["ID"].ToString()} 人";
+                this.ltValueOfMember.Text = $"共 {mValue["Account"].ToString()} 人";
+                this.TextBox1.Text = "登入功能紀錄以及收支相關流水帳";
 
 
             }

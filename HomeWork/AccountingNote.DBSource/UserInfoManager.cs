@@ -14,7 +14,7 @@ namespace AccountingNote.DBSource
         {
             string connectionString = DBHelper.GetConnectionString();
             string dbCommandString =
-                @" SELECT [UID], [ID], [Account], [PWD], [Name], [Email], [CreateDate], [UserLevel]
+                @" SELECT  [ID], [Account], [PWD], [Name], [Email], [CreateDate], [UserLevel]
                     FROM UserInfo
                     WHERE [Account] = @account
                 ";
@@ -39,7 +39,7 @@ namespace AccountingNote.DBSource
             string connStr = DBHelper.GetConnectionString();
             string dbCommand =
                 $@" SELECT
-                        UID,
+                        
                         ID,
                         Account,
                         Name,
@@ -65,12 +65,12 @@ namespace AccountingNote.DBSource
             }
         }
 
-        public static DataRow GetUser(int uid, string id)
+        public static DataRow GetUser(string id)
         {
             string connStr = DBHelper.GetConnectionString();
             string dbCommand =
                 $@"SELECT 
-                        UID,
+                        ID,
                         Name,
                         Account,
                         PWD,
@@ -78,11 +78,11 @@ namespace AccountingNote.DBSource
                         UserLevel,
                         CreateDate
                     FROM UserInfo
-                    WHERE UID = @uid AND ID = @id
+                    WHERE ID = @id
                 ";
 
             List<SqlParameter> list = new List<SqlParameter>();
-            list.Add(new SqlParameter("@uid", uid));
+            
             list.Add(new SqlParameter("@id", id));
 
             try
@@ -97,7 +97,7 @@ namespace AccountingNote.DBSource
         }
 
 
-        public static void CreateUser(string id, string account,int pwd ,string name, string email, string userlevel)
+        public static void CreateUser(string id, string account,string pwd ,string name, string email, string userlevel)
         {
             string connStr = DBHelper.GetConnectionString();
             string dbCommand =
@@ -151,30 +151,26 @@ namespace AccountingNote.DBSource
             }
         }
 
-        public static bool UpdateUserInfo(int uid, string id, string name, string account, string email , string userlevel)
+        public static bool UpdateUserInfo(string account, string name, string email)
         {
             string connStr = DBHelper.GetConnectionString();
             string dbCommand =
                 $@" UPDATE [UserInfo]
                     SET
-                         ID         = @id
-                        ,[Name]       = @name
-                        ,Account    = @account
+                         
+                        [Name]       = @name
+                        
                         ,Email      = @email
-                        ,UserLevel  = @userlevel
                         ,CreateDate = @createDate
                           
                     WHERE 
-                        UID = @uid ";
+                        Account = @Account ";
 
             List<SqlParameter> paramList = new List<SqlParameter>();
-            paramList.Add(new SqlParameter("@id", id));
-            paramList.Add(new SqlParameter("@name", name));
             paramList.Add(new SqlParameter("@account", account));
+            paramList.Add(new SqlParameter("@name", name));
             paramList.Add(new SqlParameter("@email", email));
-            paramList.Add(new SqlParameter("@userlevel", userlevel));
             paramList.Add(new SqlParameter("@createDate", DateTime.Now));
-            paramList.Add(new SqlParameter("@uid", uid));
 
 
             try
@@ -193,16 +189,16 @@ namespace AccountingNote.DBSource
             }
         }
 
-        public static void DeleteUser(int uid)
+        public static void DeleteUser(string account)
         {
             string connStr = DBHelper.GetConnectionString();
             string dbCommand =
                 $@" DELETE [UserInfo]
-                    WHERE UID = @uid ";
+                    WHERE Account = @account ";
 
 
             List<SqlParameter> paramList = new List<SqlParameter>();
-            paramList.Add(new SqlParameter("@uid", uid));
+            paramList.Add(new SqlParameter("@account", account));
 
 
             try
@@ -215,7 +211,7 @@ namespace AccountingNote.DBSource
             }
         }
 
-        public static bool UpdateUserPWD(int uid, string pwd)
+        public static bool UpdateUserPWD(string id, string pwd)
         {
             string connStr = DBHelper.GetConnectionString();
             string dbCommand =
@@ -224,11 +220,11 @@ namespace AccountingNote.DBSource
                         PWD = @pwd
                           
                     WHERE 
-                        UID = @uid ";
+                        ID = @id ";
 
             List<SqlParameter> paramList = new List<SqlParameter>();
             paramList.Add(new SqlParameter("@pwd", pwd));
-            paramList.Add(new SqlParameter("@uid", uid));
+            paramList.Add(new SqlParameter("@id", id));
 
 
             try
@@ -252,7 +248,7 @@ namespace AccountingNote.DBSource
             string connStr = DBHelper.GetConnectionString();
             string dbCommand =
                 $@" SELECT COUNT 
-                        (UID) AS UID
+                        (Account) AS Account
                     FROM UserInfo
                     
                 ";
